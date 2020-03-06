@@ -1,7 +1,6 @@
 package com.dlong.rep.swiperightbacktest.view;
 
 import android.content.Context;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -19,7 +18,7 @@ public class PageEnabledSlidingPaneLayout extends SlidingPaneLayout {
     private float mInitialMotionX;
     private float mInitialMotionY;
     /** 最小触发事件的划动距离 */
-    private float mEdgeSlop;//手滑动的距离
+    private float mTouchSlop;//手滑动的距离
 
     public PageEnabledSlidingPaneLayout(Context context) {
         this(context, null);
@@ -35,7 +34,7 @@ public class PageEnabledSlidingPaneLayout extends SlidingPaneLayout {
         //--------  ViewConfiguration 滑动参数设置类 --------//
         ViewConfiguration config = ViewConfiguration.get(context);
         //--------  它获得的是触发移动事件的最短距离，如果小于这个距离就不触发移动控件  --------//
-        mEdgeSlop = config.getScaledEdgeSlop();
+        mTouchSlop = config.getScaledEdgeSlop();
     }
 
     /**
@@ -46,7 +45,7 @@ public class PageEnabledSlidingPaneLayout extends SlidingPaneLayout {
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        switch (MotionEventCompat.getActionMasked(ev)) {
+        switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
                 // 屏幕检测到第一个触点按下
                 mInitialMotionX = ev.getX();
@@ -60,8 +59,7 @@ public class PageEnabledSlidingPaneLayout extends SlidingPaneLayout {
                 // The user should always be able to "close" the pane, so we only check
                 // for child scrollability if the pane is currently closed.
                 // 避免与其他划动控件冲突
-                if (mInitialMotionX > mEdgeSlop && !isOpen() && canScroll(this, false,
-                        Math.round(x - mInitialMotionX), Math.round(x), Math.round(y))) {
+                if (mInitialMotionX > mTouchSlop && !isOpen() && canScroll(this, false, Math.round(x - mInitialMotionX), Math.round(x), Math.round(y))) {
                     // How do we set super.mIsUnableToDrag = true?
                     // send the parent a cancel event
                     MotionEvent cancelEvent = MotionEvent.obtain(ev);
@@ -72,4 +70,5 @@ public class PageEnabledSlidingPaneLayout extends SlidingPaneLayout {
         }
         return super.onInterceptTouchEvent(ev);
     }
+
 }
