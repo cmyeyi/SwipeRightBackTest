@@ -22,6 +22,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".AIDLService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.dlong.rep.swiperightbacktest.action"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+        </service>
+        <service android:name=".MessengerService" android:process=":remote"/>
     </application>
 
 </manifest>
